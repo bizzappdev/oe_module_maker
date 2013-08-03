@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #/#############################################################################
-#    
+#
 #    BizzAppDev
 #    Copyright (C) 2004-TODAY bizzappdev(<http://www.bizzappdev.com>).
 #
@@ -15,12 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #/#############################################################################
 {
     "name": "OpenERP Module Maker",
-    "version": "0.1",
+    "version": "1.0.1",
     "author": "Ruchir Shukla (Bizzappdev)",
     "website": "http://bizzappdev.com",
     "category": "GenericModules",
