@@ -143,6 +143,7 @@ class module_module(osv.osv):
                         'type': field_obj.type})
                 openerp_data['object_datas'].append(temp_dict)
             openerp_data['objs'] = objs
+            xml_file.append("security/ir.model.access.csv")
             oe = OpenERPTemplate(self_obj.name, openerp_data,
                                  self.get_comnpany_data(cr, uid, context),
                                  self_obj.template_path)
