@@ -20,7 +20,7 @@
 #/#############################################################################
 {
     "name": "OpenERP Module Maker",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "author": "Ruchir Shukla (Bizzappdev)",
     "website": "http://bizzappdev.com",
     "category": "GenericModules",
