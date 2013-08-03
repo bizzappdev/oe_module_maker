@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #/#############################################################################
-#    
+#
 #    BizzAppDev
 #    Copyright (C) 2004-TODAY bizzappdev(<http://www.bizzappdev.com>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #/#############################################################################
 import os
@@ -64,7 +64,7 @@ class OpenERPTemplate(object):
 
         for sub_folder in list_sub_folder:
             os.mkdir(os.path.join(module_path, sub_folder))
-
+        os.mkdir(os.path.join(module_path, "security"))
         init_data = list_sub_folder + [x.replace('.py', "") for x in
                                        self.OpenERPData.get('basic_file', [])]
         self.init_file(module_path, init_data)
@@ -75,12 +75,19 @@ class OpenERPTemplate(object):
         self.openerp_file(module_path, openerp_data)
 
         for object_data in self.OpenERPData['object_datas']:
-            print "4444444444444444444$", object_data['name']
             self.py_file(module_path, object_data)
             self.xml_file(module_path, object_data)
-
+        self.security_file(module_path, self.OpenERPData)
         return module_path
-
+    def security_file(self, module_path, object_list):
+        security_temp = Template(filename=os.path.join(
+            self.template_path, 'security.mako'))
+        file_path = 'ir.model.access.csv'
+        file_path = os.path.join(module_path, 'security',
+                                 file_path)
+        sec_data = security_temp.render(object=object_list)
+        write_file(file_path, sec_data)
+                  
     def xml_file(self, module_path, object_data):
         view_temp = Template(filename=os.path.join(
             self.template_path, 'view_template.mako'))
@@ -90,6 +97,7 @@ class OpenERPTemplate(object):
                                  file_path)
         view_data = view_temp.render(object=object_data,
                                      company=self.company_data)
+                                     
         write_file(file_path, view_data)
 
     def py_file(self, module_path, object_data):
@@ -98,7 +106,7 @@ class OpenERPTemplate(object):
         file_path = '%s.%s' % (object_data['name'].replace(".", "_"), "py")
         file_path = os.path.join(module_path, object_data['sub_folder'],
                                  file_path)
-        py_data = py_temp.render(object=object_data)
+        py_data = py_temp.render(object=object_data, company=self.company_data)
         write_file(file_path, py_data)
 
     def openerp_file(self, module_path, openerp_data):
