@@ -85,7 +85,7 @@ class module_module(osv.osv):
     }
 
     def _get_tempalte_path(self, cr, uid, context={}):
-        return os.path.join(addons.__path__[0], "openerp_module_maker",
+        return os.path.join(addons.__path__[0], "oe_module_maker",
                             "template")
 
     _defaults = {
@@ -106,6 +106,7 @@ class module_module(osv.osv):
             sub_folder = []
             basic_file = []
             xml_file = []
+            objs = []
             openerp_data = {
                 'sub_folder': sub_folder,
                 'basic_file': basic_file,
@@ -113,6 +114,7 @@ class module_module(osv.osv):
                 'object_datas': []}
             for obj in self_obj.object_ids:
                 sub_folder.append(get_name(obj.name))
+                objs.append(get_name(obj.name))
                 xml_file.append(os.path.join(get_name(obj.name), '%s_view.%s' %
                                              (get_name(obj.name), 'xml')))
 
@@ -140,6 +142,7 @@ class module_module(osv.osv):
                         'tree': field_obj.tree,
                         'type': field_obj.type})
                 openerp_data['object_datas'].append(temp_dict)
+            openerp_data['objs'] = objs
             oe = OpenERPTemplate(self_obj.name, openerp_data,
                                  self.get_comnpany_data(cr, uid, context),
                                  self_obj.template_path)
