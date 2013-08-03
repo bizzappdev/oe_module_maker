@@ -57,7 +57,7 @@ def _get_fields_type(self, cr, uid, context=None):
                    issubclass(v, fields._column) and
                    v != fields._column and
                    not v._deprecated and
-                   not issubclass(v, fields.function)])
+                   not issubclass(v, fields.function)]+[('button', 'Button')])
 
 
 class module_module(osv.osv):
