@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <menuitem id="menu_module_module"
+            name="Module Maker"
+            sequence="20"/>
+
+        <menuitem id="menu_module_module_main"
+            parent="menu_module_module"
+            name="Module Maker"
+            sequence="20"/>
+
+    <record id="view_module_module_tree" model="ir.ui.view">
+        <field name="name">module.module.tree</field>
+        <field name="model">module.module</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <tree string="Module">
+            <field name="name"/>
+        </tree>
+        </field>
+    </record>
+
+    <record id="view_module_module_form" model="ir.ui.view">
+        <field name="name">module.module.form</field>
+        <field name="model">module.module</field>
+        <field name="type">form</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <form string="Module" version="7.0">
+            <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <label for="name" string="Module Name"/>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <newline/>
+                <group>
+                <field name="template_path" placeholder="Template Path"
+                    nolabel="1"/>
+                </group>
+            <separator string="Objects" colspan="4"/>
+            <field name="object_ids">
+                <form string="Object" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Object Name"/>
+                            </div>
+                            <h1>
+                                <field name="name" select="1"/>
+                            </h1>
+                        </div>
+                        <group col="4" colspan="4">
+                            <field name="description" placeholder="Description"
+                                nolabel="1" colspan="2"/>
+                        </group>
+                        <separator string="Fields" colspan="4"/>
+                        <field name="field_ids" colspan="4"/>
+                    </sheet>
+                </form>
+            </field>
+            <button string="Create Module" type="object" name="genrate_module"/>
+            <separator string="Module File" colspan="4"/>
+            <field name="module_file" filename="file_name"/>
+            <field name="file_name" invisible="1"/>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <record id="view_module_module_search" model="ir.ui.view">
+        <field name="name">module.module.search</field>
+        <field name="model">module.module</field>
+        <field name="type">search</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <search string="Module">
+            <field name="name" select="True"/>
+        </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_module_module_view">
+        <field name="name">Module</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">module.module</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_module_module_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_module_module_view_form">
+        <field name="act_window_id" ref="act_open_module_module_view"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_module_module_form"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_module_module_view_tree">
+        <field name="act_window_id" ref="act_open_module_module_view"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_module_module_tree"/>
+    </record>
+
+    <menuitem id="menu_module_module_new"
+        parent="menu_module_module_main"
+        sequence="10"
+        action="act_open_module_module_view"/>
+
+    <record id="view_module_object_tree" model="ir.ui.view">
+        <field name="name">module.object.tree</field>
+        <field name="model">module.object</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <tree string="Object">
+            <field name="name"/>
+            <field name="description"/>
+        </tree>
+        </field>
+    </record>
+    <record id="view_module_object_search" model="ir.ui.view">
+        <field name="name">module.object.search</field>
+        <field name="model">module.object</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <search string="Object">
+            <field name="name"/>
+            <field name="description"/>
+        </search>
+        </field>
+    </record>
+
+
+    <record id="view_module_object_form" model="ir.ui.view">
+        <field name="name">module.object.form</field>
+        <field name="model">module.object</field>
+        <field name="type">form</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <form string="Object" version="7.0">
+            <sheet>
+                <div class="oe_title">
+                    <div class="oe_edit_only">
+                        <label for="name" string="Object Name"/>
+                    </div>
+                    <h1>
+                        <field name="name" select="1"/>
+                    </h1>
+                </div>
+                <group col="4" colspan="4">
+                    <field name="description" placeholder="Description"
+                        nolabel="1" colspan="2"/>
+                    <field name="module_id" placeholder="Module" nolabel="1"
+                        colspan="2"/>
+                </group>
+                <separator string="Fields" colspan="4"/>
+                <field name="field_ids" colspan="4"/>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_module_object_view">
+        <field name="name">Module Object</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">module.object</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_module_object_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_module_object_view_form">
+        <field name="act_window_id" ref="act_open_module_object_view"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_module_object_form"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_module_object_view_tree">
+        <field name="act_window_id" ref="act_open_module_object_view"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_module_object_tree"/>
+    </record>
+
+    <menuitem id="menu_module_object_new"
+        parent="menu_module_module_main"
+        sequence="10"
+        action="act_open_module_object_view"/>
+
+    <record id="view_module_object_field_tree" model="ir.ui.view">
+        <field name="name">module.object.field.tree</field>
+        <field name="model">module.object.field</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <tree string="Fields">
+            <field name="name"/>
+            <field name="type"/>
+            <field name="field_caption"/>
+            <field name="relation"/>
+        </tree>
+        </field>
+    </record>
+
+    <record id="view_module_object_field_form" model="ir.ui.view">
+        <field name="name">module.object.field.form</field>
+        <field name="model">module.object.field</field>
+        <field name="type">form</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <form string="Label">
+            <field name="name" select="1"/>
+            <field name="type"/>
+            <field name="relation_field" attrs="{'required': [('type','in', ('one2many', 'many2many'))]}"/>
+            <field name="relation" attrs="{'required': [('type','in', ('many2one', 'one2many', 'many2many'))]}"/>
+            <field name="field_caption" required="1"/>
+            <field name="selection" attrs="{'required': [('type','=', 'selection')]}"/>
+            <field name="required"/>
+            <field name="readonly"/>
+            <field name="select_level"/>
+            <field name="translate"/>
+            <field name="size" attrs="{'required': [('type','=', 'char')]}"/>
+            <field name="help"/>
+            <field name="on_delete"/>
+            <field name="domain"/>
+        </form>
+        </field>
+    </record>
+    </data>
+</openerp>
