@@ -60,6 +60,15 @@
                         </group>
                         <separator string="Fields" colspan="4"/>
                         <field name="field_ids" colspan="4"/>
+                        <separator string="Status Flow" colspan="4"/>
+                        <field name="status_field_id"
+                            on_change="onchange_status_field(status_field_id)"/>
+                        <field name="status_line_ids">
+                            <tree>
+                                <field name="priority"/>
+                                <field name="status"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>

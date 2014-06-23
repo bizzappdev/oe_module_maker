@@ -21,18 +21,32 @@
             <field name="model">${object['name']}</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-            <form string="${object['name'].replace('.',' ').title()}">
-            %for field in object['list']:
-            %if field['form']:
-              %if field['type'] in ('o2m','m2m'):
-                <separator string="${field['string']}" colspan="4"/>
-                <field name="${field['field'].strip()}" colspan="4" nolabel="1"/>
-              %else:
-                <field name="${field['field'].strip()}"/>
-              %endif
-             %endif
-            %endfor
-            </form>
+                <form string="${object['name'].replace('.',' ').title()}">
+                    <sheet>
+                        %if object['status']:
+                        <footer>
+                        %for st_val in object['status']:
+                            <button string="${object['status_values'][st_val['to_state']]}" name="act_${st_val['to_state']}" status="${st_val['from_state']}" type="object"/>
+                        %endfor
+                        </footer>
+                        %endif
+                    %for field in object['list']:
+                    %if field['form']:
+                      %if field['type'] in ('o2m','m2m'):
+                        <separator string="${field['string']}" colspan="4"/>
+                        <field name="${field['field'].strip()}" colspan="4" nolabel="1"/>
+                      %elif field['type'] != 'button':
+                        <field name="${field['field'].strip()}"/>
+                      %endif
+                     %endif
+                    %endfor
+                    % for button in object['list']:
+                    % if button['type'] == 'button':
+                        <button name="button_${button['field']}" type="object"/>
+                    %endif
+                    %endfor
+                    </sheet>
+                </form>
             </field>
         </record>
 

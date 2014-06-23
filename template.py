@@ -98,7 +98,7 @@ class OpenERPTemplate(object):
         file_path = '%s.%s' % (object_data['name'].replace(".", "_"), "py")
         file_path = os.path.join(module_path, object_data['sub_folder'],
                                  file_path)
-        py_data = py_temp.render(object=object_data)
+        py_data = py_temp.render(object=object_data,company=self.company_data)
         write_file(file_path, py_data)
 
     def openerp_file(self, module_path, openerp_data):
