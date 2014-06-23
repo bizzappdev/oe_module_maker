@@ -42,7 +42,7 @@ class ${object['name'].replace(".","_")}(osv.osv):
             '${field['field'].strip()}': fields.many2many('${field['relation']}', '${field['related_field']}', '${object['name'].replace(".","_")+"_id"}', '${field['relation'].replace(".","_")+"_id"}', string='${field['string']}'),
         %elif field['type'] == 'selection':
             '${field['field'].strip()}': fields.${field['type']}(${field['option']}, string='${field['string']}', ${field['required'] and ' required=True' or ' '}),
-        %else:
+        %elif field['type'] != 'button':
             '${field['field'].strip()}': fields.${field['type']}(string='${field['string']}', ${field['required'] and ' required=True' or ' '}),
         %endif
     % endfor
@@ -56,7 +56,7 @@ class ${object['name'].replace(".","_")}(osv.osv):
     % endfor
     % for act in object['status']:
     def act_${act['to_state'].strip()}(self, cr, uid, ids, conext=None):
-        return self.write(cr, uid, ids, {${object['status_field'].name}: '${act['to_state']}'})
+        return self.write(cr, uid, ids, {'${object['status_field'].name}': '${act['to_state']}'})
     % endfor
 
 

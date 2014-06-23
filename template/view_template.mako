@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
             <tree string="${object['name'].replace('.',' ').title()}">
                 %for field in object['list']:
-                 %if field['tree']:
-            	<field name="${field['field'].strip()}"/>
+                 %if field['tree'] and field['type'] != 'button':
+                <field name="${field['field'].strip()}"/>
                  %endif
                 %endfor
             </tree>
@@ -21,15 +21,16 @@
             <field name="model">${object['name']}</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <form string="${object['name'].replace('.',' ').title()}">
+                <form string="${object['name'].replace('.',' ').title()}" version="7.0">
+                    %if object['status']:
+                    <header>
+                    %for st_val in object['status']:
+                        <button string="${object['status_values'][st_val['to_state']]}" name="act_${st_val['to_state']}" states="${st_val['from_state']}" type="object"/>
+                    %endfor
+                    </header>
+                    %endif
                     <sheet>
-                        %if object['status']:
-                        <footer>
-                        %for st_val in object['status']:
-                            <button string="${object['status_values'][st_val['to_state']]}" name="act_${st_val['to_state']}" status="${st_val['from_state']}" type="object"/>
-                        %endfor
-                        </footer>
-                        %endif
+                        <group>
                     %for field in object['list']:
                     %if field['form']:
                       %if field['type'] in ('o2m','m2m'):
@@ -40,9 +41,10 @@
                       %endif
                      %endif
                     %endfor
+                        </group>
                     % for button in object['list']:
                     % if button['type'] == 'button':
-                        <button name="button_${button['field']}" type="object"/>
+                        <button string="${button['string']}" name="button_${button['field']}" type="object"/>
                     %endif
                     %endfor
                     </sheet>
@@ -57,7 +59,7 @@
             <field name="arch" type="xml">
             <search string="${object['name'].replace('.',' ').title()}">
                 %for field in object['list']:
-                %if field['type'] not in ('binary','o2m') and field['search']:
+                %if field['type'] not in ('binary','o2m', 'button') and field['search']:
                 <field name="${field['field'].strip()}"/>
                 %endif
                 %endfor
