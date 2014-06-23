@@ -3,7 +3,7 @@
 #/#############################################################################
 #
 #    BizzAppDev
-#    Copyright (C) 2004-TODAY bizzappdev(<http://www.bizzappdev.com>).
+#    Copyright (C) 2014-TODAY bizzappdev(<http://www.bizzappdev.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -57,7 +57,7 @@ def _get_fields_type(self, cr, uid, context=None):
                    issubclass(v, fields._column) and
                    v != fields._column and
                    not v._deprecated and
-                   not issubclass(v, fields.function)])
+                   not issubclass(v, fields.function)]+[('button', 'Button')])
 
 
 class module_module(osv.osv):
@@ -123,6 +123,9 @@ class module_module(osv.osv):
                     '_rec_name': '',
                     'inherit': '',
                     'name': obj.name,
+                    'status': [],
+                    'status_field': obj.status_field_id,
+                    'status_values': dict(eval(obj.status_field_id.selection)),
                     'sub_folder': get_name(obj.name)}
                 for field_obj in obj.field_ids:
                     temp_dict['list'].append({
@@ -141,6 +144,23 @@ class module_module(osv.osv):
                                    field_obj.name.capitalize()),
                         'tree': field_obj.tree,
                         'type': field_obj.type})
+                status_len = 0
+                all_state = [x.status for x in obj.status_line_ids
+                             if x.priority == 0]
+                while (status_len+1 < len(obj.status_line_ids)):
+                    status_obj = obj.status_line_ids[status_len]
+
+                    temp_dict['status'].append({
+                        'from_state': status_obj.status,
+                        'to_state': obj.status_line_ids[status_len+1].status,
+                    })
+                    for all_st in all_state:
+                        temp_dict['status'].append({
+                            'from_state': status_obj.status,
+                            'to_state': all_st
+                        })
+                    status_len += 1
+                    print "444444444444444444$$",temp_dict['status']
                 openerp_data['object_datas'].append(temp_dict)
             openerp_data['objs'] = objs
             xml_file.append("security/ir.model.access.csv")
@@ -179,9 +199,42 @@ class module_object(osv.osv):
         'field_ids': fields.one2many('module.object.field', 'object_id',
                                      'Object Fields'),
         'module_id': fields.many2one('module.module', 'Module', required=True),
+        'status_field_id': fields.many2one('module.object.field',
+                                    'Status Based on Field'),
+        'status_line_ids': fields.one2many('module.object.status',
+                                           'object_id',
+                                           'Status Lines'),
     }
 
+    def onchange_status_field(self, cr, uid, ids, status_field_id,
+                              context=None):
+        ret_val = {'value': {'status_line_ids': []}}
+        if not status_field_id:
+            return ret_val
+
+        field_pool = self.pool.get('module.object.field')
+        f_obj = field_pool.browse(cr, uid, status_field_id, context=context)
+        final_lst = []
+        for prio,state in enumerate(eval(f_obj.selection)):
+            final_lst.append({'status': state[0], 'priority': prio+1})
+        ret_val['value']['status_line_ids'] = final_lst
+        return  ret_val
+
 module_object()
+
+
+class module_object_status(osv.osv):
+    _name = 'module.object.status'
+    _order = 'priority'
+    _rec_name = 'status'
+    _columns = {
+        'object_id': fields.many2one('module.object.status'),
+        'status': fields.char('Status', size=64),
+        'priority': fields.integer(
+            'Priority', help='Set the priority based on your flow '
+            'e.g(Draft --> 1, Open --> 2, Done --> 3, cancel --> 0) '
+            'For the state which is common set 0')
+    }
 
 
 class module_object_field(osv.osv):

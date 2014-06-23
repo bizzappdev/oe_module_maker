@@ -3,7 +3,7 @@
 #/#############################################################################
 #
 #    ${company['name']}
-#    Copyright (C) 2004-TODAY ${company['short_name']}(${company['website']}).
+#    Copyright (C) 2014-TODAY ${company['short_name']}(${company['website']}).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -42,11 +42,23 @@ class ${object['name'].replace(".","_")}(osv.osv):
             '${field['field'].strip()}': fields.many2many('${field['relation']}', '${field['related_field']}', '${object['name'].replace(".","_")+"_id"}', '${field['relation'].replace(".","_")+"_id"}', string='${field['string']}'),
         %elif field['type'] == 'selection':
             '${field['field'].strip()}': fields.${field['type']}(${field['option']}, string='${field['string']}', ${field['required'] and ' required=True' or ' '}),
-        %else:
+        %elif field['type'] != 'button':
             '${field['field'].strip()}': fields.${field['type']}(string='${field['string']}', ${field['required'] and ' required=True' or ' '}),
         %endif
     % endfor
     }
+    % for button in object['list']:
+    % if button['type'] == 'button':
+    def button_${button['field'].strip()}(self, cr, uid, ids, conext=None):
+        #TODO your button Code
+        return True
+    %endif
+    % endfor
+    % for act in object['status']:
+    def act_${act['to_state'].strip()}(self, cr, uid, ids, conext=None):
+        return self.write(cr, uid, ids, {'${object['status_field'].name}': '${act['to_state']}'})
+    % endfor
+
 
 ${object['name'].replace(".","_")}()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -87,7 +87,7 @@ class OpenERPTemplate(object):
                                  file_path)
         sec_data = security_temp.render(object=object_list)
         write_file(file_path, sec_data)
-                  
+
     def xml_file(self, module_path, object_data):
         view_temp = Template(filename=os.path.join(
             self.template_path, 'view_template.mako'))
@@ -97,7 +97,6 @@ class OpenERPTemplate(object):
                                  file_path)
         view_data = view_temp.render(object=object_data,
                                      company=self.company_data)
-                                     
         write_file(file_path, view_data)
 
     def py_file(self, module_path, object_data):
