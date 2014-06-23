@@ -48,10 +48,18 @@
                     <sheet>
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" string="Object Name"/>
+                                <label for="inherit" string="Do you want to
+                                    Inherit Object ?"/>
+                                <field name="inherit"/>
                             </div>
                             <h1>
-                                <field name="name" select="1"/>
+                                <field name="name" select="1"
+                                    placeholder="Object Name"
+                                    attrs="{'required': [('inherit','=', False)], 'invisible': [('inherit','!=', False)]}"/>
+                                <field name="inherit_id" attrs="{'invisible':
+                                    [('inherit','!=', True)], 'required': [('inherit','=', True)]}"
+                                    placeholder="Select Existing Object"
+                                    on_change="onchange_inherit_id(inherit_id)"/>
                             </h1>
                         </div>
                         <group col="4" colspan="4">
@@ -159,10 +167,18 @@
             <sheet>
                 <div class="oe_title">
                     <div class="oe_edit_only">
-                        <label for="name" string="Object Name"/>
+                        <label for="inherit" string="Do you want to
+                            Inherit Object ?"/>
+                        <field name="inherit"/>
                     </div>
                     <h1>
-                        <field name="name" select="1"/>
+                        <field name="name" select="1"
+                            placeholder="Object Name"
+                            attrs="{'required': [('inherit','=', False)], 'invisible': [('inherit','!=', False)]}"/>
+                        <field name="inherit_id" attrs="{'invisible':
+                            [('inherit','!=', True)], 'required': [('inherit','=', True)]}"
+                            placeholder="Select Existing Object"
+                            on_change="onchange_inherit_id(inherit_id)"/>
                     </h1>
                 </div>
                 <group col="4" colspan="4">

@@ -121,7 +121,7 @@ class module_module(osv.osv):
                 temp_dict = {
                     'list': [],
                     '_rec_name': '',
-                    'inherit': '',
+                    'inherit': obj.inherit,
                     'name': obj.name,
                     'status': [],
                     'status_field': obj.status_field_id,
@@ -160,7 +160,6 @@ class module_module(osv.osv):
                             'to_state': all_st
                         })
                     status_len += 1
-                    print "444444444444444444$$",temp_dict['status']
                 openerp_data['object_datas'].append(temp_dict)
             openerp_data['objs'] = objs
             xml_file.append("security/ir.model.access.csv")
@@ -193,9 +192,10 @@ class module_object(osv.osv):
     _description = 'Module Object'
 
     _columns = {
-        'name': fields.char('Object Name', size=64, required=True),
-        'description': fields.char('Object Description', size=64,
-                                   required=True),
+        'name': fields.char('Object Name', size=64),
+        'inherit': fields.boolean('Do you want to inherit Object ?'),
+        'inherit_id': fields.many2one('ir.model', 'Model'),
+        'description': fields.char('Object Description', size=64),
         'field_ids': fields.one2many('module.object.field', 'object_id',
                                      'Object Fields'),
         'module_id': fields.many2one('module.module', 'Module', required=True),
@@ -205,6 +205,7 @@ class module_object(osv.osv):
                                            'object_id',
                                            'Status Lines'),
     }
+
 
     def onchange_status_field(self, cr, uid, ids, status_field_id,
                               context=None):
@@ -219,6 +220,18 @@ class module_object(osv.osv):
             final_lst.append({'status': state[0], 'priority': prio+1})
         ret_val['value']['status_line_ids'] = final_lst
         return  ret_val
+
+    def onchange_inherit_id(self, cr, uid, ids, inherit_id, context={}):
+        res = {'value': {'name': '', 'description': ''}}
+
+        if not inherit_id:
+            return res
+        model_obj = self.pool.get('ir.model').browse(cr, uid, inherit_id,
+                                                     context=context)
+        res['value']['name'] = model_obj.model
+        res['value']['description'] = model_obj.name
+        return res
+
 
 module_object()
 
