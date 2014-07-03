@@ -76,6 +76,8 @@ class OpenERPTemplate(object):
 
         for object_data in self.OpenERPData['object_datas']:
             self.py_file(module_path, object_data)
+            self.init_file(os.path.join(module_path, object_data['sub_folder']),
+                [object_data['name'].replace('.', '_')])
             self.xml_file(module_path, object_data)
         self.security_file(module_path, self.OpenERPData)
         return module_path
@@ -275,7 +277,7 @@ if __name__ == '__main__':
                             'basic_file': ['test.py'],
                             'object_datas': object_datas},
                            {'name': 'Ruchir Shukla', 'short_name': 'Ruchir',
-                            'website': 'http://ruchir-shukla.blogspot.in/'})
+                            'website': 'http://www.bizzappdev.com/'})
 
     oerp.create_module("/home/ruchir/")
 

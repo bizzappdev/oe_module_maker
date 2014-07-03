@@ -125,7 +125,8 @@ class module_module(osv.osv):
                     'name': obj.name,
                     'status': [],
                     'status_field': obj.status_field_id,
-                    'status_values': dict(eval(obj.status_field_id.selection)),
+                    'status_values': obj.status_field_id and dict(
+                        eval(obj.status_field_id.selection)) or {},
                     'sub_folder': get_name(obj.name)}
                 for field_obj in obj.field_ids:
                     temp_dict['list'].append({
@@ -160,7 +161,6 @@ class module_module(osv.osv):
                             'to_state': all_st
                         })
                     status_len += 1
-                    print "444444444444444444$$",temp_dict['status']
                 openerp_data['object_datas'].append(temp_dict)
             openerp_data['objs'] = objs
             xml_file.append("security/ir.model.access.csv")
@@ -249,12 +249,12 @@ class module_object_field(osv.osv):
         'relation': fields.many2one('module.object', 'Relation Object'),
         'field_caption': fields.char('Field Label', size=64),
         'selection': fields.char('Selection Options', size=128, ),
-        'required': fields.boolean('Required'),
-        'readonly': fields.boolean('Read-only'),
+        'required': fields.boolean('Required ?'),
+        'readonly': fields.boolean('Read-only ?'),
         'select_level': fields.selection(
             [('0', 'Not Searchable'), ('1', 'Always Searchable')],
-            'Searchable'),
-        'translate': fields.boolean('Translatable', ),
+            'Searchable ?'),
+        'translate': fields.boolean('Translatable ?', ),
         'size': fields.integer('Size'),
         'on_delete': fields.selection(
             [('cascade', 'Cascade'), ('set null', 'Set NULL')],
